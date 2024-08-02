@@ -1,0 +1,162 @@
+{% extends "header-footer.html" %}
+{% load static %}
+{% block content %}
+<style>
+    .ocontainer {
+        margin-top: 50px;
+    }
+
+    .order-list {
+        margin-top: 20px;
+    }
+
+    .card {
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #ccc;
+        padding: 10px 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      
+    }
+
+    .card-header h5 {
+        margin: 0;
+    }
+
+    .order-info {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .order-details {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .order-id-total p {
+        margin: 0;
+    }
+
+    .order-date-status {    
+        text-align: right;
+        min-width: 150px;
+    }
+
+    .order-date-status p {
+        margin: 0;
+    }
+
+    .card-body {
+        padding: 15px;
+    }
+
+    .product-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+
+    .product-table th, .product-table td {
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .product-table th {
+        background-color: #f8f9fa;
+    }
+
+    .product-image {
+        max-width: 50px;
+    }
+
+    .shipping-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 15px;
+    }
+
+    .shipping-info p {
+        margin: 0;
+        font-weight: bold;
+        font-size: 1.1em;
+    }
+    .ocontainer{
+        padding-bottom: 120px;
+    }
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: #fff;
+        margin-left: auto;
+    }
+</style>
+
+<div class="container mt-5 ocontainer">
+    <h2>My Orders</h2>
+    {% if orders %} 
+    <div class="order-list">
+        {% for order in orders %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <div class="order-info">
+                    <div class="order-details">
+                        <div class="order-id-total">
+                            <p><strong>Order ID:</strong> {{ order.id }}</p>
+                            <p><strong>Total:</strong> ₹{{ order.total }}</p>
+                        </div>
+                    </div>
+                    <div class="order-date-status">
+                        <p><strong>Date:</strong> {{ order.created_at|date:"d-M-Y" }}</p>
+                        <p><strong>Status:</strong> {{ order.status }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <h6><strong>Products:</strong></h6>
+                <table class="product-table">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order.items.all %}
+                        <tr>
+                            <td><img src="{{ item.product.pimg.url }}" alt="{{ item.product.pname }}" class="product-image"></td>
+                            <td>{{ item.product.pname }}</td>
+                            <td>₹{{ item.price }}</td>
+                            <td>{{ item.quantity }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="shipping-info">
+                    <h6><strong>Shipping to: </strong>{{ order.billing.full_name }}</h6>
+                    <a href="#" class="btn btn-primary">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <h5  class="mt-5">You have no orders yet</h5 >
+    {% endif %}
+</div>
+{% endblock content %}

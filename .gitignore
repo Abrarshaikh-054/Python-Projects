@@ -1,0 +1,26 @@
+# Ignore Python bytecode files
+*.pyc
+__pycache__/
+
+# Byte-compiled / optimized / DLL files
+*.py[cod]
+*$py.class
+
+# Ignore virtual environment
+venv/
+
+# Ignore Django database
+db.sqlite3
+
+# Ignore environment variables
+.env
+
+# Ignore VS Code settings folder
+.vscode/
+
+# Django media:
+media
+staticfiles
+
+# Django secret key file
+secret_key.txt
