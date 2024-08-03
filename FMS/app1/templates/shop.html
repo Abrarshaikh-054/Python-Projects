@@ -1,0 +1,190 @@
+{% extends "header-footer.html" %}
+{% load static %}
+{% block content %}    
+
+<style>
+@media (max-width: 767.98px) { 
+  .border-sm-start-none { 
+    border-left: none !important; 
+  } 
+}
+
+/* Custom CSS for Primary button */
+.btn-primary-custom {
+  border-radius: 10px;
+  background-color: #007bff; /* Primary color */
+  border-color: #007bff; /* Primary border */
+  color: #fff; /* White text color */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for background color and box shadow */
+}
+
+.btn-primary-custom:hover {
+  background-color: #0056b3; /* Darker primary on hover */
+  border-color: #0056b3; /* Darker border color on hover */
+  color: #fff; /* White text color */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+}
+
+.btn-primary-custom:active {
+  background-color: #004085; /* Even darker primary on active */
+  border-color: #004085; /* Even darker border color on active */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Adjust shadow on active */
+}
+
+/* Custom CSS for Buy Now button */
+.btn-buy-now {
+  border-radius: 10px;
+  background-color: #ffc107; /* Yellow color */
+  border-color: #ffc107; /* Yellow border */
+  color: #212529; /* Text color */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for background color and box shadow */
+}
+
+.btn-buy-now:hover {
+  background-color: #d39e00; /* Darker yellow on hover */
+  border-color: #d39e00; /* Darker border color on hover */
+  color: #212529; /* Text color */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+}
+
+.btn-buy-now:active {
+  background-color: #c69500; /* Even darker yellow on active */
+  border-color: #c69500; /* Even darker border color on active */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Adjust shadow on active */
+}
+
+/* Custom CSS for Remove button */
+.btn-remove {
+  border-radius: 10px;
+  background-color: #dc3545; /* Bootstrap danger color */
+  border-color: #dc3545; /* Bootstrap danger border color */
+  color: #fff; /* White text color */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for background color and box shadow */
+}
+
+.btn-remove:hover {
+  background-color: #c82333; /* Darker danger color on hover */
+  border-color: #c82333; /* Darker border color on hover */
+  color: #fff; /* White text color */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+}
+
+.btn-remove:active {
+  background-color: #bd2130; /* Even darker danger color on active */
+  border-color: #bd2130; /* Even darker border color on active */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Adjust shadow on active */
+}
+
+/* Custom CSS for Add to Cart button */
+.btn-add {
+  border-radius: 10px;
+  color: #ffffff;
+  background: #2f2f2f; 
+  color: #fff; /* White text color */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for background color and box shadow */
+}
+
+.btn-add:hover {
+  background-color: #222222; /* Darker black on hover */
+  border-color: #222222; /* Darker border color on hover */
+  color: #fff; /* White text color */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+}
+
+.btn-add:active {
+  background-color: #2f2f2f; /* Black color on active */
+  border-color: #222222; /* Black border color on active */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Adjust shadow on active */
+}
+
+/* Reduce button size */
+.btn-sm {
+  padding: 0.5rem 0.5rem; /* Adjust padding for smaller size */
+  font-size: 0.875rem; /* Adjust font size for smaller size */
+}
+
+/* Extra margin bottom for the container */
+.p-contain {
+  margin-bottom: 60px; /* Adjust as per your footer height */
+}
+</style>
+
+<section style="background-color: #eee;">
+	<div class="notification">
+		{% if messages %}
+			{% for message in messages %}
+				<div class="alert {{ message.tags }} alert-dismissible fade show" role="alert">
+					{{ message }}
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			{% endfor %}
+		{% endif %}
+	</div>
+    <div class="container p-contain py-5">
+      {% for p in product %}
+      <div class="row justify-content-center mb-3">
+        <div class="col-md-12 col-xl-10">
+          <div class="card shadow-0 border rounded-3">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-12 col-lg-3 col-xl-3 mb-4 mb-lg-0">
+                  <div class="bg-image hover-zoom ripple rounded ripple-surface">
+                    <img src="{{ p.pimg.url }}" class="w-100" />
+                    <a href="#!">
+                      <div class="hover-overlay">
+                        <div class="mask" style="background-color: rgba(253, 253, 253, 0.15);"></div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-xl-6">
+                  <h5>{{ p.pname }}</h5>
+                  <div class="d-flex flex-row">
+                    <div class="text-warning mb-1 me-2">
+                      <i class="fa fa-star"></i>
+                      <i class="fa fa-star"></i>
+                      <i class="fa fa-star"></i>
+                      <i class="fa fa-star"></i>
+                    </div>
+                    <span></span>
+                  </div>
+                  <div class="mt-1 mb-0 text-muted small">
+                    <span>{{ p.pcat|title }}</span>
+                    <span class="text-primary"> • </span>
+                    <span>Unique</span>
+                    <span class="text-primary"> • </span>
+					<span>Light weight</span>
+                  </div>
+                  <div class="mb-2 text-muted small">
+                    <span>{{ p.pdesc }}<br /></span>
+                  </div>
+                  <p class="text-truncate mb-4 mb-md-0">
+                    {{ p.pdesc }}
+                  </p>
+                </div>
+                <div class="col-md-6 col-lg-3 col-xl-3 border-sm-start-none border-start">
+                  <div class="d-flex flex-row align-items-center mb-1">
+                    <h4 class="mb-1 me-1">₹{{ p.pprice }}</h4>
+                    <span class="text-danger"><s></s></span>
+                  </div>
+                  <h6 class="text-success">Free shipping</h6>
+                  <div class="d-flex flex-column mt-4">
+                    <a  href="{% url 'mdetails' pk=p.pk %}" class="btn btn-primary-custom btn-sm">More Details</a>
+                    {% if p.pk in mywish %}
+                    <a href="{% url 'removewish' pk=p.pk %}" class="btn btn-remove btn-sm mt-2">Remove from wishlist</a>
+                    {% else %}
+                    <a href="{% url 'addwish' pk=p.pk %}?source=shop" class="btn btn-add btn-sm mt-2">Add to wishlist</a>
+                    {% endif %}	
+                    <a href="{% url 'addcart' pk=p.pk %}?source=buynow" class="btn btn-buy-now btn-sm mt-2">Buy Now</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+</section>
+
+{% endblock %}

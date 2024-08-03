@@ -1,0 +1,11 @@
+.notification {
+    position: fixed;
+    top: 100px;
+    right: 10px;
+    z-index: 1050;
+    max-width: 300px;
+}
+
+.notification .alert {
+    margin-bottom: 10px;
+}

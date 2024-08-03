@@ -1,0 +1,154 @@
+{% extends "header-footer.html" %}
+{% load static %}
+{% block content %}
+<!-- Start Hero Section -->
+<div class="hero">
+    <div class="container">
+        <div class="row justify-content-between">
+            <div class="col-lg-5">
+                <div class="intro-excerpt">
+                    <h1>Checkout</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Hero Section -->
+
+<div class="untree_co-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <h2 class="h3 mb-3 text-black">Your Order</h2>
+                <div class="p-3 p-lg-5 border bg-white">
+                    <table class="table site-block-order-table mb-5">
+                        <thead>
+                            <th>Product</th>
+                            <th>Total</th>
+                        </thead>
+                        <tbody>
+                            {% for item in mycart %}
+                            <tr>
+                                <td>{{ item.product.pname }} <strong class="mx-2">x</strong> {{ item.pqty }}</td>
+                                <td>{{ item.pttl }}</td>
+                            </tr>
+                            {% endfor %}
+                            <tr>
+                                <td class="text-black font-weight-bold"><strong>Cart Subtotal</strong></td>
+                                <td class="text-black">{{ cttl }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-black font-weight-bold"><strong>Order Total</strong></td>
+                                <td class="text-black font-weight-bold"><strong>{{ cttl }}</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-5 mb-md-0">
+                <h2 class="h3 mb-3 text-black">Billing Details</h2>
+                <div class="p-3 p-lg-5 border bg-white">
+                    <form id="checkout-form" method="POST" action="{% url 'checkout' %}" novalidate>
+                        {% csrf_token %}
+                        <input type="hidden" id="razorpay_payment_id" name="razorpay_payment_id">
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <label for="full_name" class="text-black">Full Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="full_name" name="full_name" required>
+                                <div class="invalid-feedback">Please enter your full name.</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <label for="email" class="text-black">Email Address <span class="text-danger">*</span></label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                                <div class="invalid-feedback">Please enter a valid email address.</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <label for="phone" class="text-black">Mobile <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="phone" name="phone" required pattern="\d{10}">
+                                <div class="invalid-feedback">Please enter a valid 10-digit mobile number.</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <label for="address" class="text-black">Address <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="address" name="address" rows="4" required></textarea>
+                                <div class="invalid-feedback">Please enter your address.</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <label for="city" class="text-black">City <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="city" name="city" required>
+                                <div class="invalid-feedback">Please enter your city.</div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label for="state" class="text-black">State <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="state" name="state" required>
+                                <div class="invalid-feedback">Please enter your state.</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button id="rzp-button1" type="button" class="btn btn-black btn-lg py-3 btn-block">Place Order</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    var options = {
+        "key": "{{ context.razorpay_key }}", // Enter the Key ID generated from the Dashboard
+        "amount": "{{ context.payment.amount }}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "currency": "INR",
+        "name": "Furni",
+        "description": "Test Payment",
+        "handler": function (response) {
+            // Store the payment ID in a hidden input field
+            document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+
+            // Submit the form programmatically
+            var form = document.getElementById('checkout-form');
+            form.submit();
+        },
+        "theme": {
+            "color": "#94CA21"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.on('payment.failed', function (response) {
+        alert(response.error.code);
+        alert(response.error.description);
+        alert(response.error.source);
+        alert(response.error.step);
+        alert(response.error.reason);
+        alert(response.error.metadata.order_id);
+        alert(response.error.metadata.payment_id);
+    });
+
+    function validateForm() {
+        var form = document.getElementById('checkout-form');
+        if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+        return form.checkValidity();
+    }
+
+    document.getElementById('rzp-button1').onclick = function (e) {
+        if (validateForm()) {
+            rzp1.open();
+        }
+        e.preventDefault();
+    }
+</script>
+
+{% endblock content %}
