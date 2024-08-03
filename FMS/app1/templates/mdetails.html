@@ -1,0 +1,295 @@
+{% extends "header-footer.html" %}
+{% load static %}
+{% block content %}
+
+<style>
+  /* Custom CSS for product details page */
+  .card img {
+    max-width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 0.3rem;
+  }
+
+  .card .row.no-gutters {
+    position: relative;
+  }
+
+  .card .row.no-gutters:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    background-color: #ddd;
+    transform: translateX(-50%);
+  }
+
+  @media (max-width: 768px) {
+    .card .row.no-gutters:before {
+      width: 100%;
+      height: 2px;
+      top: auto;
+      bottom: 0;
+      left: 0;
+      transform: none;
+    }
+  }
+
+  .carousel-indicators {
+    bottom: -15px;
+  }
+
+  .carousel-indicators li {
+    background-color: #ccc;
+    border: none;
+  }
+
+  .carousel-indicators .active {
+    background-color: #007bff;
+  }
+
+  .carousel-preview {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  .carousel-preview img {
+    width: 50px;
+    height: auto;
+    margin: 0 5px;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+  }
+
+  .carousel-preview img.active {
+    opacity: 1;
+  }
+
+  .c-card {
+    padding-bottom: 60px;
+  }
+
+  .btn-remove, .btn-buy-now, .btn-add, .btn-primary-custom {
+    border-radius: 10px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .btn-remove {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: #fff;
+  }
+
+  .btn-remove:hover {
+    background-color: #c82333;
+    border-color: #c82333;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .btn-remove:active {
+    background-color: #bd2130;
+    border-color: #bd2130;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .btn-buy-now {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #212529;
+  }
+
+  .btn-buy-now:hover {
+    background-color: #d39e00;
+    border-color: #d39e00;
+    color: #212529;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .btn-buy-now:active {
+    background-color: #c69500;
+    border-color: #c69500;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .btn-add {
+    background-color: #2f2f2f;
+    border-color: #2f2f2f;
+    color: #fff;
+  }
+
+  .btn-add:hover {
+    background-color: #222222;
+    border-color: #222222;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .btn-add:active {
+    background-color: #2f2f2f;
+    border-color: #222222;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .btn-primary-custom {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+  }
+
+  .btn-primary-custom:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .btn-primary-custom:active {
+    background-color: #004085;
+    border-color: #004085;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .d-flex button {
+    margin-right: 10px;
+  }
+
+  @media (max-width: 768px) {
+    .d-flex {
+      flex-direction: column;
+    }
+
+    .d-flex button {
+      margin-bottom: 10px;
+      width: 100%;
+    }
+  }
+</style>
+
+<section class="py-5">
+  <div class="container c-card">
+    <div class="notification">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+    <div class="card shadow mb-4">
+      <div class="card-body">
+        <div class="row justify-content-center align-items-start">
+          <div class="col-lg-6 carousel-container">
+            <div id="productCarousel" class="carousel slide mb-3" data-bs-ride="carousel">
+              <div class="carousel-inner">
+                <div class="carousel-item active">
+                  <img src="{{product.pimg.url}}" class="d-block w-100" alt="Product Image">
+                </div>
+                <div class="carousel-item">
+                  <img src="{{product.pimg.url}}" class="d-block w-100" alt="Product Image">
+                </div>
+                <div class="carousel-item">
+                  <img src="{{product.pimg.url}}" class="d-block w-100" alt="Product Image">
+                </div>
+              </div>
+              <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+              </button>
+              <ol class="carousel-indicators">
+                <li data-bs-target="#productCarousel" data-bs-slide-to="0" class="active"></li>
+                <li data-bs-target="#productCarousel" data-bs-slide-to="1"></li>
+                <li data-bs-target="#productCarousel" data-bs-slide-to="2"></li>
+              </ol>
+            </div>
+            <div class="carousel-preview">
+              <img src="{{product.pimg.url}}" alt="Preview Image" class="active">
+              <img src="{{product.pimg.url}}" alt="Preview Image">
+              <img src="{{product.pimg.url}}" alt="Preview Image">
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="p-4">
+              <h4 class="card-title mb-3 text-dark">{{product.pname}}</h4>
+              <h6 class="card-subtitle text-muted">Unique caption for product</h6>
+              <div class="d-flex flex-row my-3">
+                <div class="text-warning mb-0 me-2">
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fas fa-star-half-alt"></i>
+                  <span class="ms-1">4.5</span>
+                </div>
+                <span class="text-muted"><i class="fas fa-shopping-basket fa-sm mx-1"></i>154 orders</span>
+                <span class="text-success ms-2">In stock</span>
+              </div>
+
+              <div class="mb-3">
+                <span class="h5">₹{{product.pprice}}</span>
+              </div>
+
+              <p>{{product.pdesc}}</p>
+
+              <div class="row mb-3">
+                <dt class="col-4">Type:</dt>
+                <dd class="col-8">{{ product.pcat }}</dd>
+
+                <dt class="col-4">Color:</dt>
+                <dd class="col-8">{{ product.color }}</dd>
+
+                <dt class="col-4">Material:</dt>
+                <dd class="col-8">{{ product.material }}</dd>
+
+                <dt class="col-4">Brand:</dt>
+                <dd class="col-8">{{ product.brand }}</dd>
+              </div>
+
+              <div class="d-flex flex-wrap">
+                <a href="{% url 'addcart' pk=product.pk %}?source=buynow" class="btn btn-buy-now shadow-0 me-2 mb-2">Buy now</a>
+
+                {% if product.pk in mycart %}
+                <a href="{% url 'deletecart' pk=product.pk %}?source=mdetails" class="btn btn-remove shadow-0 me-2 mb-2">Delete</a>
+                {% else %}
+                <a href="{% url 'addcart' pk=product.pk %}?source=mdetails" class="btn btn-add shadow-0 me-2 mb-2">Add to cart</a>
+                {% endif %}
+
+                {% if product.pk in mywish %}
+                <a href="{% url 'removewish' pk=product.pk %}?source=mdetails" class="btn btn-remove shadow-0 me-2 mb-2">Remove</a>
+                {% else %}
+                <a href="{% url 'addwish' pk=product.pk %}?source=mdetails" class="btn btn-primary-custom shadow-0 me-2 mb-2">Save</a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const carouselPreview = document.querySelectorAll('.carousel-preview img');
+    carouselPreview[0].classList.add('active');
+
+    carouselPreview.forEach((preview, index) => {
+      preview.addEventListener('click', () => {
+        carouselPreview.forEach(preview => preview.classList.remove('active'));
+        preview.classList.add('active');
+        const carousel = new bootstrap.Carousel(document.getElementById('productCarousel'));
+        carousel.to(index);
+      });
+    });
+  });
+</script>
+
+{% endblock %}
+

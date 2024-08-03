@@ -1,0 +1,151 @@
+{% extends "header-footer.html" %}
+{% load static %}
+{% block content %}
+
+<div class="untree_co-section position-relative">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-7">
+        <div class="card shadow-sm bg-light border">
+          <div class="card-body p-4">
+            <h2 class="text-center mb-4">SIGN UP</h2>
+            {% if s_msg %}
+            <div class="alert alert-success text-center" role="alert">
+                {{s_msg}}
+            </div>
+            {% endif %}
+            {% if f_msg %}
+            <div class="alert alert-danger text-center" role="alert">
+                {{f_msg}}
+            </div>
+            {% endif %}
+            <form action="{% url "signup" %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group mb-4 row align-items-center">
+                  <label for="user" class="form-label col-sm-2">Select User</label>
+                  <div class="col-sm-3">
+                    <select class="form-select" name="usertype" id="user" required>
+                      <option value="customer">Customer</option>
+                      <option value="seller">Seller</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group mb-3">
+                  <label for="name" class="form-label">Full Name</label>
+                  <input type="text" class="form-control" id="name" name="name" required>
+                  <div class="invalid-feedback">Please enter a valid name (at least 3 characters).</div>
+                </div>
+                <div class="form-group mb-3">
+                  <label for="uname" class="form-label">User Name</label>
+                  <input type="text" class="form-control" id="uname" name="uname" required>
+                  <div class="invalid-feedback">Please enter a valid username (at least 3 characters).</div>
+                </div>
+                <div class="form-group mb-3">
+                  <label for="email" class="form-label">Email Address</label>
+                  <input type="email" class="form-control" id="email" name="email" required>
+                  <div class="invalid-feedback">Please enter a valid email address.</div>
+                </div>
+                <div class="form-group mb-3">
+                  <label for="mobile" class="form-label">Mobile Number</label>
+                  <input type="tel" class="form-control" id="mobile" name="mobile" required>
+                  <div class="invalid-feedback">Please enter a valid 10-digit mobile number.</div>
+                </div>
+                <div class="form-group mb-3">
+                  <label for="password" class="form-label">Password</label>
+                  <input type="password" class="form-control" id="password" name="password" required>
+                  <div class="invalid-feedback">Password must be 6-20 characters long, with at least one numeric digit, one uppercase and one lowercase letter.</div>
+                </div>
+                <div class="form-group mb-4">
+                  <label for="confirm_password" class="form-label">Confirm Password</label>
+                  <input type="password" class="form-control" id="cpassword" name="cpassword" required>
+                  <div class="invalid-feedback">Passwords do not match.</div>
+                </div>
+                
+
+              <div class="form-group mb-4 d-flex flex-column">
+                <label for="file" class="form-label">Profile Picture</label>
+                <input type="file" class="form-control-file" id="file" name="profile" required>
+              </div>
+              
+              <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    // Regular expressions for validation
+    const nameRegex = /^[a-zA-Z\s]{3,}$/;
+    const unameRegex = /^[a-zA-Z0-9_]{3,}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const mobileRegex = /^\d{10}$/;
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+
+    function validateField(input, regex) {
+      if (regex.test(input.val())) {
+        input.removeClass('is-invalid').addClass('is-valid');
+        return true;
+      } else {
+        input.removeClass('is-valid').addClass('is-invalid');
+        return false;
+      }
+    }
+
+    // Validate name
+    $('#name').on('input', function() {
+      validateField($(this), nameRegex);
+    });
+
+    // Validate username
+    $('#uname').on('input', function() {
+      validateField($(this), unameRegex);
+    });
+
+    // Validate email
+    $('#email').on('input', function() {
+      validateField($(this), emailRegex);
+    });
+
+    // Validate mobile
+    $('#mobile').on('input', function() {
+      validateField($(this), mobileRegex);
+    });
+
+    // Validate password
+    $('#password').on('input', function() {
+      validateField($(this), passwordRegex);
+    });
+
+    // Confirm password
+    $('#cpassword').on('input', function() {
+      if ($(this).val() === $('#password').val() && $(this).val() !== '') {
+        $(this).removeClass('is-invalid').addClass('is-valid');
+      } else {
+        $(this).removeClass('is-valid').addClass('is-invalid');
+      }
+    });
+
+    // Form submission validation
+    $('form').on('submit', function(event) {
+      const isNameValid = validateField($('#name'), nameRegex);
+      const isUnameValid = validateField($('#uname'), unameRegex);
+      const isEmailValid = validateField($('#email'), emailRegex);
+      const isMobileValid = validateField($('#mobile'), mobileRegex);
+      const isPasswordValid = validateField($('#password'), passwordRegex);
+      const isConfirmPasswordValid = $('#cpassword').val() === $('#password').val() && $('#cpassword').val() !== '';
+
+      if (!(isNameValid && isUnameValid && isEmailValid && isMobileValid && isPasswordValid && isConfirmPasswordValid)) {
+        event.preventDefault();
+      }
+    });
+  });
+</script>
+
+
+{% endblock content %}

@@ -1,0 +1,166 @@
+{% extends "header-footer.html" %}
+{% load static %}
+{% block content %}
+
+<style>
+/* Custom styles for the wishlist page */
+.wishlist-container {
+  margin-bottom: 80px;
+}
+
+.title{
+  padding-bottom: 10px;
+}
+.wishlist-item {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  padding: 10px;
+  flex-wrap: wrap; /* Enable wrapping for responsive design */
+}
+
+.wishlist-item img {
+  width: 100px;
+  height: auto;
+  border-radius: 8px;
+}
+
+.wishlist-item .product-info {
+  margin-left: 20px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  
+}
+
+.wishlist-item .product-info h5,
+.wishlist-item .product-info p,
+.wishlist-item .product-info h6 {
+  margin-bottom: 10px;
+}
+
+.wishlist-item .product-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap; /* Ensure buttons wrap in small screens */
+}
+
+.wishlist-item .product-actions a {
+  margin: 5px 10px 5px 0;
+}
+
+/* Custom CSS for Buy Now button */
+
+
+/* Custom CSS for Add to Cart button */
+.btn-add {
+  border-radius: 10px;
+  color: #ffffff;
+  background: #2f2f2f; 
+  color: #fff; /* White text color */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for background color and box shadow */
+}
+
+.btn-add:hover {
+  background-color: #222222; /* Darker black on hover */
+  border-color: #222222; /* Darker border color on hover */
+  color: #fff; /* White text color */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+}
+
+.btn-add:active {
+  background-color: #2f2f2f; /* Black color on active */
+  border-color: #222222; /* Black border color on active */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Adjust shadow on active */
+}
+
+/* Custom CSS for Remove button */
+.btn-remove {
+  border-radius: 10px;
+  background-color: #dc3545; /* Bootstrap danger color */
+  border-color: #dc3545; /* Bootstrap danger border color */
+  color: #fff; /* White text color */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for background color and box shadow */
+}
+
+.btn-remove:hover {
+  background-color: #c82333; /* Darker danger color on hover */
+  border-color: #c82333; /* Darker border color on hover */
+  color: #fff; /* White text color */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+}
+
+.btn-remove:active {
+  background-color: #bd2130; /* Even darker danger color on active */
+  border-color: #bd2130; /* Even darker border color on active */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Adjust shadow on active */
+}
+
+@media (max-width: 768px) {
+  .wishlist-container{
+    max-width: 90%;
+  }
+  .btn-add,.btn-remove{
+    font-size: 0.8rem;
+  }
+  .wishlist-item {
+    flex-direction: row; 
+    align-items: center;
+  }
+
+  .wishlist-item .product-info {
+    margin-left: 20px;
+    margin-top: 10px;
+  }
+
+  .wishlist-item .product-actions {
+    justify-content: flex-start;
+    margin-top: 10px;
+  }
+
+  .wishlist-item .product-actions a {
+    margin: 5px 5px 0 0;
+  }
+}
+</style>
+
+<section style="background-color: #eee;">
+    <div class="notification">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+    <div class="container wishlist-container py-5">
+        <h2 class="title">My Wishlist</h2>
+        {% if mywish %}
+            <div class="row">
+                {% for i in mywish %}
+                    <div class="col-md-12 wishlist-item">
+                        <img src="{{ i.product.pimg.url }}" alt="{{ i.product.pname }}">
+                        <div class="product-info">
+                            <h5>{{ i.product.pname }}</h5>
+                            <p>Added on {{ i.datetime }}</p>
+                            <h6 class="text-success">${{ i.product.pprice }}</h6>
+                        </div>
+                        <div class="product-actions">
+                            <a href="{% url 'addcart' pk=i.product.pk %}?source=wishlist" class="btn btn-add btn-sm">Add to Cart</a>
+                            <a href="{% url 'removewish' pk=i.product.pk %}?source=wishlist" class="btn btn-remove btn-sm">Remove</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Your wishlist is empty.</p>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}

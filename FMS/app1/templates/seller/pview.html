@@ -1,0 +1,127 @@
+{% extends "seller/sheader.html" %}
+{% load static %}
+{% block content %}
+
+<style>
+    .modal-dialog{
+        max-width: 500px;
+    }
+    .product-thumbnail {
+        height: 300px;
+        width: 300px;
+        object-fit:  cover;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .product-title {
+        text-align: center;
+    }
+    .text-center {
+    text-align: center;
+    margin-bottom: 20px; 
+    }
+
+    .text-start {
+    text-align: left;
+    }
+
+    .modal-body img {
+        max-height: 300px;
+        width: 300px;
+        object-fit: cover;
+        margin:10px;
+    }
+
+    .modal-body p {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .modal-footer .btn {
+        margin-right: 10px;
+    }  
+
+    .modal-footer {
+        justify-content: center;
+    }
+
+    .btn-danger-custom {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: white;
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .btn-danger-custom:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+
+     .btn-danger-custom:active {
+        background-color: #bd2130;
+        border-color: #b21f2d;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.5);
+    }
+</style>
+
+<div class="product-section">
+    <div class="container">
+        <div class="notification">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="row">
+            {% for p in product %}
+            <!-- Start Column 1 -->
+            <div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-5">
+                <a class="product-item" href="#" data-bs-toggle="modal" data-bs-target="#productModal{{ p.id }}">
+                    <img src="{{ p.pimg.url }}" class="img-fluid product-thumbnail">
+                    <h3 class="product-title">{{ p.pname }}</h3>
+                    <strong class="product-price">${{ p.pprice }}</strong>
+
+                    <span class="icon-cross">
+                        <img src="{% static 'images/cross.svg' %}" class="img-fluid">
+                    </span>
+                </a>
+            </div>
+            <!-- End Column 1 -->
+
+            <!-- Modal -->
+            <div class="modal fade" id="productModal{{ p.id }}" tabindex="-1" aria-labelledby="productModalLabel{{ p.id }}" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="text-center">
+                                <h5 class="modal-title" id="productModalLabel{{ p.id }}">{{ p.pname }}</h5>
+                                <img src="{{ p.pimg.url }}" class="img-fluid" alt="{{ p.pname }}">
+                            </div>
+                            <div class="text-start">
+                                <p><strong>Description:</strong> {{ p.pdesc }}</p>
+                                <p><strong>Category:</strong> {{ p.pcat }}</p>
+                                <p><strong>Price:</strong> ${{ p.pprice }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="modal-footer">
+                            <a href="{% url 'pupdate' pk=p.pk %}" class="btn btn-primary">Update</a>
+                            <a href="{% url 'pdelete' pk=p.pk %}" class="btn btn-danger-custom" onclick="return confirm('Are you sure you want to delete this product?');">Delete</a>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
